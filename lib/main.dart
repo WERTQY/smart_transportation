@@ -1,23 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:smart_transportation/home/home.dart';
 
 void main() {
-  runApp(MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(
-        title: const Text("LOGIN"),
-        backgroundColor: Colors.blue[600],
-        centerTitle: true,
-      ),
-      body: const Home(),
-    ),
+  runApp(const MaterialApp(
+    home: Home(),
   ));
 }
 
-class Home extends StatelessWidget {
-  const Home({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text("Test");
-  }
-}
