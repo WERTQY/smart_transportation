@@ -18,6 +18,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text("Hi everyone. my name is gay");
+    return const Text("Test");
   }
 }
