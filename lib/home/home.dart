@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_transportation/home/map.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,7 +12,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Text("53100000"),
+      body: const HomeMap(),
       bottomNavigationBar: BottomAppBar(
         color: const Color.fromARGB(255, 35, 152, 255),
         child: Row(
