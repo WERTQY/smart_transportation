@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smart_transportation/home/home.dart';
+import 'package:smart_transportation/home/navigation_bar.dart';
 
 void main() {
   runApp(const MaterialApp(
-    home: Home(),
+    home: HomeNavigationBar(),
   ));
 }
 
