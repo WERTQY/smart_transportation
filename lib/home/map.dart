@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:smart_transportation/home/panel_widget.dart';
 
 class HomeMap extends StatefulWidget {
   const HomeMap({super.key});
@@ -14,6 +16,10 @@ class _HomeMapState extends State<HomeMap> {
 
   final LatLng _center = const LatLng(3.1220007402224543, 101.65689475884037);
   LocationData? currentLocation;
+
+  final panelController = PanelController();
+  static const double fabHeightClosed = 60;
+  double fabHeight = fabHeightClosed;
 
   void _getCurrentLocation () {
     Location location = Location();
@@ -53,28 +59,49 @@ class _HomeMapState extends State<HomeMap> {
 
   @override
   Widget build(BuildContext context) {
+    final panelHeightOpen = MediaQuery.of(context).size.height * 0.8;
+    final panelHeightClosed = 40.0;
+
     return Stack(
-        children: [
-          GoogleMap(
+      alignment: Alignment.topCenter,
+      children: <Widget>[
+        SlidingUpPanel(
+          minHeight: panelHeightClosed,
+          maxHeight: panelHeightOpen,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+          parallaxEnabled: true,
+          parallaxOffset: .55,
+          controller: panelController,
+          onPanelSlide: (position) => setState(() {
+            final panelMaxScrollExtent = panelHeightOpen - panelHeightClosed;
+            fabHeight = position * panelMaxScrollExtent + fabHeightClosed;
+          }),
+          body: GoogleMap(
             onMapCreated: _onMapCreated,
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
             zoomControlsEnabled: false,
             initialCameraPosition: CameraPosition(
-              target: currentLocation == null? _center : LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-              zoom: 17.5,
+              target: currentLocation == null? _center : LatLng(currentLocation!.latitude!, currentLocation!.longitude!),                zoom: 17.5,
             ),
           ), 
-          Positioned(
-            bottom: 20,
-            right: 20,
-            child: FloatingActionButton(
-              onPressed: _moveToCurrentLocation,
-              backgroundColor: Colors.white,
-              child: const Icon(Icons.my_location),
-            ),
+          panelBuilder: (controller) => PanelWidget(
+            controller: controller,
+            panelController: panelController,
           ),
-        ],
-      );
+        ),      
+        Positioned(
+          right: 20,
+          bottom: fabHeight,
+          child: buildFAB(context),
+        ),
+      ]
+    );
   }
+
+  Widget buildFAB(BuildContext context) => FloatingActionButton(
+    onPressed: _moveToCurrentLocation,
+    backgroundColor: Colors.white,
+    child: const Icon(Icons.my_location),
+  );
 }
