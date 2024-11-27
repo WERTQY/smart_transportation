@@ -15,18 +15,23 @@ class PanelWidget extends StatelessWidget {
 
   final user = FirebaseAuth.instance.currentUser!;
 
-
   PanelWidget({
-    Key? key,
+    super.key,
     required this.controller,
     required this.panelController,
-  }) : super(key: key);
+  });
 
   @override
-  Widget build(BuildContext context) => ListView(
-    physics: const NeverScrollableScrollPhysics(),
+  Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.translucent,
+    onTap: () {
+      // Unfocus text fields when tapping outside
+      FocusScope.of(context).unfocus();
+    },
+    child: ListView(
     padding: EdgeInsets.zero,
     controller: controller,
+    physics: const NeverScrollableScrollPhysics(),
     children: <Widget>[
       const SizedBox(height: 18,),
       buildDragHandle(),
@@ -34,12 +39,12 @@ class PanelWidget extends StatelessWidget {
       Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 " Book Ride",
                 style: TextStyle(
                   fontSize: 35,
                   letterSpacing: 4,
-                  color: Colors.grey[700],
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -80,17 +85,22 @@ class PanelWidget extends StatelessWidget {
           //just a line
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Expanded(
-                child: Divider(
-              thickness: 1,
-              color: Colors.grey[500],
-            )),
-          ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                  thickness: 1,
+                  color: Colors.grey[500],
+                ),
+              ),
+              ],
+            ),
+        ),
           const SizedBox(height: 20),
-
           //'Confirm Order' button
           MyButton(onTap: sentOrder, text: 'Confirm Order')
     ],
+  ),
   );
 
   Widget buildDragHandle() => GestureDetector(
@@ -121,6 +131,9 @@ class PanelWidget extends StatelessWidget {
   }
 
   void sentOrder() {
+    pickupController.addListener(() {
+      print('Text input: ${pickupController.text}');
+    });
     if (kDebugMode) {
       print('Order Sent');
     }

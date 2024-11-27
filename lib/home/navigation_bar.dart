@@ -28,7 +28,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white, // Change background color
-        selectedItemColor: Colors.blue, // Color for selected items
+        selectedItemColor: Colors.black, // Color for selected items
         unselectedItemColor: Colors.grey, // Color for unselected items
         onTap: (int newIndex) {
           setState(() {
