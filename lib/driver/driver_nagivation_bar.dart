@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:smart_transportation/driver/driver_income_page.dart';
 import 'package:smart_transportation/driver/driver_profile_page.dart';
 import 'package:smart_transportation/driver/driver_home_map.dart';
-import 'package:smart_transportation/home/passenger_profile.dart';
 
 class DriverHomeNavigationBar extends StatefulWidget {
   const DriverHomeNavigationBar({super.key});
@@ -15,7 +15,7 @@ class _DriverHomeNavigationBarState extends State<DriverHomeNavigationBar> {
   int _currentIndex = 0;
   List<Widget> body = const [
     DriverHomeMap(),
-    Text("income"),
+    DriverIncomePage(),
     Text("info"),
     DriverProfilePage(),
   ];
