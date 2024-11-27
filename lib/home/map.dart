@@ -12,7 +12,7 @@ class HomeMap extends StatefulWidget {
 }
 
 class _HomeMapState extends State<HomeMap> {
-  late GoogleMapController mapController; 
+  late GoogleMapController mapController;
 
   final LatLng _center = const LatLng(3.1220007402224543, 101.65689475884037);
   LocationData? currentLocation;
@@ -21,13 +21,13 @@ class _HomeMapState extends State<HomeMap> {
   static const double fabHeightClosed = 60;
   double fabHeight = fabHeightClosed;
 
-  void _getCurrentLocation () {
+  void _getCurrentLocation() {
     Location location = Location();
 
     location.getLocation().then(
       (location) {
         setState(() {
-          currentLocation = location; 
+          currentLocation = location;
         });
         _moveToCurrentLocation();
       },
@@ -35,7 +35,7 @@ class _HomeMapState extends State<HomeMap> {
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _getCurrentLocation();
   }
@@ -62,46 +62,47 @@ class _HomeMapState extends State<HomeMap> {
     final panelHeightOpen = MediaQuery.of(context).size.height * 0.8;
     final panelHeightClosed = 40.0;
 
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: <Widget>[
-        SlidingUpPanel(
-          minHeight: panelHeightClosed,
-          maxHeight: panelHeightOpen,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
-          parallaxEnabled: true,
-          parallaxOffset: .55,
-          controller: panelController,
-          onPanelSlide: (position) => setState(() {
-            final panelMaxScrollExtent = panelHeightOpen - panelHeightClosed;
-            fabHeight = position * panelMaxScrollExtent + fabHeightClosed;
-          }),
-          body: GoogleMap(
-            onMapCreated: _onMapCreated,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            zoomControlsEnabled: false,
-            initialCameraPosition: CameraPosition(
-              target: currentLocation == null? _center : LatLng(currentLocation!.latitude!, currentLocation!.longitude!),                zoom: 17.5,
-            ),
-          ), 
-          panelBuilder: (controller) => PanelWidget(
-            controller: controller,
-            panelController: panelController,
+    return Stack(alignment: Alignment.topCenter, children: <Widget>[
+      SlidingUpPanel(
+        minHeight: panelHeightClosed,
+        maxHeight: panelHeightOpen,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+        parallaxEnabled: true,
+        parallaxOffset: .55,
+        controller: panelController,
+        onPanelSlide: (position) => setState(() {
+          final panelMaxScrollExtent = panelHeightOpen - panelHeightClosed;
+          fabHeight = position * panelMaxScrollExtent + fabHeightClosed;
+        }),
+        body: GoogleMap(
+          onMapCreated: _onMapCreated,
+          myLocationEnabled: true,
+          myLocationButtonEnabled: false,
+          zoomControlsEnabled: false,
+          initialCameraPosition: CameraPosition(
+            target: currentLocation == null
+                ? _center
+                : LatLng(
+                    currentLocation!.latitude!, currentLocation!.longitude!),
+            zoom: 17.5,
           ),
-        ),      
-        Positioned(
-          right: 20,
-          bottom: fabHeight,
-          child: buildFAB(context),
         ),
-      ]
-    );
+        panelBuilder: (controller) => PanelWidget(
+          controller: controller,
+          panelController: panelController,
+        ),
+      ),
+      Positioned(
+        right: 20,
+        bottom: fabHeight,
+        child: buildFAB(context),
+      ),
+    ]);
   }
 
   Widget buildFAB(BuildContext context) => FloatingActionButton(
-    onPressed: _moveToCurrentLocation,
-    backgroundColor: Colors.white,
-    child: const Icon(Icons.my_location),
-  );
+        onPressed: _moveToCurrentLocation,
+        backgroundColor: Colors.white,
+        child: const Icon(Icons.my_location),
+      );
 }

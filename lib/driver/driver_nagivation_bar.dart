@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:smart_transportation/home/map.dart';
+import 'package:smart_transportation/driver/driver_profile_page.dart';
+import 'package:smart_transportation/driver/driver_home_map.dart';
 import 'package:smart_transportation/home/passenger_profile.dart';
 
-class HomeNavigationBar extends StatefulWidget {
-  const HomeNavigationBar({super.key});
+class DriverHomeNavigationBar extends StatefulWidget {
+  const DriverHomeNavigationBar({super.key});
 
   @override
-  State<HomeNavigationBar> createState() => _HomeNavigationBarState();
+  State<DriverHomeNavigationBar> createState() =>
+      _DriverHomeNavigationBarState();
 }
 
-class _HomeNavigationBarState extends State<HomeNavigationBar> {
+class _DriverHomeNavigationBarState extends State<DriverHomeNavigationBar> {
   int _currentIndex = 0;
   List<Widget> body = const [
-    HomeMap(),
-    Text("route"),
+    DriverHomeMap(),
+    Text("income"),
     Text("info"),
-    PassengerProfile(),
+    DriverProfilePage(),
   ];
 
   @override
@@ -38,7 +40,8 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
         items: const [
           BottomNavigationBarItem(
               label: 'Booking', icon: Icon(Icons.car_crash)),
-          BottomNavigationBarItem(label: 'Route', icon: Icon(Icons.route)),
+          BottomNavigationBarItem(
+              label: 'Income', icon: Icon(Icons.attach_money)),
           BottomNavigationBarItem(label: 'Info', icon: Icon(Icons.info)),
           BottomNavigationBarItem(label: 'Profile', icon: Icon(Icons.person)),
         ],
