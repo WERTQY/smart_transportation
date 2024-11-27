@@ -60,22 +60,26 @@ class _HomeMapState extends State<HomeMap> {
   @override
   Widget build(BuildContext context) {
     final panelHeightOpen = MediaQuery.of(context).size.height * 0.8;
-    final panelHeightClosed = 40.0;
+    final panelHeightClosed = 41.0;
 
     return Stack(
       alignment: Alignment.topCenter,
       children: <Widget>[
         SlidingUpPanel(
+          controller: panelController,
           minHeight: panelHeightClosed,
           maxHeight: panelHeightOpen,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
           parallaxEnabled: true,
           parallaxOffset: .55,
-          controller: panelController,
           onPanelSlide: (position) => setState(() {
             final panelMaxScrollExtent = panelHeightOpen - panelHeightClosed;
             fabHeight = position * panelMaxScrollExtent + fabHeightClosed;
           }),
+          panelBuilder: (controller) => PanelWidget(
+            controller: controller,
+            panelController: panelController,
+          ),
           body: GoogleMap(
             onMapCreated: _onMapCreated,
             myLocationEnabled: true,
@@ -85,10 +89,6 @@ class _HomeMapState extends State<HomeMap> {
               target: currentLocation == null? _center : LatLng(currentLocation!.latitude!, currentLocation!.longitude!),                zoom: 17.5,
             ),
           ), 
-          panelBuilder: (controller) => PanelWidget(
-            controller: controller,
-            panelController: panelController,
-          ),
         ),      
         Positioned(
           right: 20,

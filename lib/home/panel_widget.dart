@@ -13,6 +13,7 @@ class PanelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView(
+    physics: const NeverScrollableScrollPhysics(),
     padding: EdgeInsets.zero,
     controller: controller,
     children: <Widget>[
@@ -33,6 +34,7 @@ class PanelWidget extends StatelessWidget {
   );
 
   Widget buildDragHandle() => GestureDetector(
+    behavior: HitTestBehavior.translucent,
     onTap: togglePanel,
     child: Center( 
       child: Container(
@@ -46,7 +48,11 @@ class PanelWidget extends StatelessWidget {
     ),
   );
   
-void togglePanel() => panelController.isPanelOpen ? 
-  panelController.close() :
-  panelController.open();
+  void togglePanel() {
+    if(panelController.panelPosition > 0.99) {
+      panelController.close();
+    } else {
+      panelController.open();
+    }
+  }
 }

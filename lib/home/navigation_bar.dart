@@ -12,6 +12,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
   int _currentIndex = 0;
   List<Widget> body = const [
     HomeMap(),
+    Text("driver"),
     Text("route"),
     Text("info"),
     Text("profile"),
@@ -38,13 +39,16 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
           BottomNavigationBarItem(
             label: 'Booking',
             icon: Icon(Icons.car_crash)),
-            BottomNavigationBarItem(
+          BottomNavigationBarItem(
+            label: 'Driver',
+            icon: Icon(Icons.drive_eta)),
+          BottomNavigationBarItem(
             label: 'Route',
             icon: Icon(Icons.route)),
-            BottomNavigationBarItem(
+          BottomNavigationBarItem(
             label: 'Info',
             icon: Icon(Icons.info)),
-            BottomNavigationBarItem(
+          BottomNavigationBarItem(
             label: 'Profile',
             icon: Icon(Icons.person)),
         ],
