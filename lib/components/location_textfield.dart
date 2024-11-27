@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
-class MyTextField extends StatelessWidget {
+class LocationTextField extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final controller;
+  final TextEditingController controller;
   final String hintText;
   final bool obscureText;
   final Icon? icon;
   final Color? prefixIconColor;
+  final bool autoFocus;
+  final FocusNode focusNode;
 
-  const MyTextField({
+  const LocationTextField({
     super.key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
+    required this.autoFocus,
+    required this.focusNode,
     this.icon,
     this.prefixIconColor
   });
@@ -23,7 +27,10 @@ class MyTextField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
         enableSuggestions: false,
+        autofocus: autoFocus,
+        focusNode: focusNode,
         controller: controller,
+        onTap: () => controller.clear(),
         obscureText: obscureText,
         decoration: InputDecoration(
             prefixIcon: icon,

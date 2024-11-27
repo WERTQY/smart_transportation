@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:smart_transportation/home/location_controller.dart';
 import 'package:smart_transportation/home/map.dart';
 
 class HomeNavigationBar extends StatefulWidget {
@@ -10,6 +12,7 @@ class HomeNavigationBar extends StatefulWidget {
 
 class _HomeNavigationBarState extends State<HomeNavigationBar> {
   int _currentIndex = 0;
+
   List<Widget> body = const [
     HomeMap(),
     Text("driver"),
@@ -20,6 +23,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(LocationController());
     return Scaffold(
       body: Center(
         child: body[_currentIndex],
@@ -37,7 +41,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
         },
         items: const [
           BottomNavigationBarItem(
-            label: 'Booking',
+            label: 'Transport',
             icon: Icon(Icons.car_crash)),
           BottomNavigationBarItem(
             label: 'Driver',
