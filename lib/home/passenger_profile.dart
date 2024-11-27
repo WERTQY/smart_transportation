@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:smart_transportation/driver/driver_nagivation_bar.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class PassengerProfile extends StatefulWidget {
   const PassengerProfile({super.key});
@@ -37,6 +39,19 @@ class _PassengerProfileState extends State<PassengerProfile> {
   String? originalHomeAddress;
   String? originalRace;
   String? originalReligion;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFirebase();
+  }
+
+  Future<void> _initializeFirebase() async {
+    await Firebase.initializeApp();
+    _databaseReference = FirebaseDatabase.instance.ref();
+  }
+
+  DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
 
   void _handleButtonTap() {
     Navigator.pushReplacement(
@@ -95,7 +110,21 @@ class _PassengerProfileState extends State<PassengerProfile> {
         originalHomeAddress = homeAddressController.text;
         originalRace = selectedRace;
         originalReligion = selectedReligion;
+
+        _updateProfileInDatabase();
       }
+    });
+  }
+
+  void _updateProfileInDatabase() {
+    _databaseReference.child('passenger_profile').set({
+      'Name': nameController.text,
+      'Age': ageController.text,
+      'Phone_Number': phoneNumberController.text,
+      'Email': emailController.text,
+      'Home_Address': homeAddressController.text,
+      'Race': selectedRace,
+      'Religion': selectedReligion,
     });
   }
 
