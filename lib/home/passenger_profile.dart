@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:smart_transportation/driver/driver_nagivation_bar.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class PassengerProfile extends StatefulWidget {
   const PassengerProfile({super.key});
@@ -40,57 +38,17 @@ class _PassengerProfileState extends State<PassengerProfile> {
   String? originalRace;
   String? originalReligion;
 
-  DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
-  late Future<void> _fetchDataFuture;
-
   @override
   void initState() {
     super.initState();
-    _initializeFirebase();
-    _fetchDataFuture = _fetchProfileData();
-  }
-
-  Future<void> _initializeFirebase() async {
-    try {
-      await Firebase.initializeApp();
-      _databaseReference = FirebaseDatabase.instance.ref();
-      print('Firebase initialized');
-    } catch (e) {
-      print('Error initializing Firebase: $e');
-    }
-  }
-
-  Future<void> _fetchProfileData() async {
-    try {
-      final snapshot =
-          await _databaseReference.child('passenger_profile').get();
-      if (snapshot.exists) {
-        final data = snapshot.value as Map<String, dynamic>;
-        setState(() {
-          nameController.text = data['Name'] ?? '';
-          ageController.text = data['Age'] ?? '';
-          phoneNumberController.text = data['Phone_Number'] ?? '';
-          emailController.text = data['Email'] ?? '';
-          homeAddressController.text = data['Home_Address'] ?? '';
-          selectedRace = data['Race'];
-          selectedReligion = data['Religion'];
-
-          // Save original values
-          originalName = nameController.text;
-          originalAge = ageController.text;
-          originalPhoneNumber = phoneNumberController.text;
-          originalEmail = emailController.text;
-          originalHomeAddress = homeAddressController.text;
-          originalRace = selectedRace;
-          originalReligion = selectedReligion;
-        });
-        print('Profile data fetched successfully');
-      } else {
-        print('No data found in the database.');
-      }
-    } catch (e) {
-      print('Error fetching profile data: $e');
-    }
+    // Initialize original values
+    originalName = nameController.text;
+    originalAge = ageController.text;
+    originalPhoneNumber = phoneNumberController.text;
+    originalEmail = emailController.text;
+    originalHomeAddress = homeAddressController.text;
+    originalRace = selectedRace;
+    originalReligion = selectedReligion;
   }
 
   void _handleButtonTap() {
@@ -150,26 +108,7 @@ class _PassengerProfileState extends State<PassengerProfile> {
         originalHomeAddress = homeAddressController.text;
         originalRace = selectedRace;
         originalReligion = selectedReligion;
-
-        // Update the profile information in the Firebase Realtime Database
-        _updateProfileInDatabase();
       }
-    });
-  }
-
-  void _updateProfileInDatabase() {
-    _databaseReference.child('passenger_profile').set({
-      'Name': nameController.text,
-      'Age': ageController.text,
-      'Phone_Number': phoneNumberController.text,
-      'Email': emailController.text,
-      'Home_Address': homeAddressController.text,
-      'Race': selectedRace,
-      'Religion': selectedReligion,
-    }).then((_) {
-      print('Profile data updated successfully');
-    }).catchError((error) {
-      print('Failed to update profile data: $error');
     });
   }
 
@@ -234,117 +173,97 @@ class _PassengerProfileState extends State<PassengerProfile> {
             ),
         ],
       ),
-      body: FutureBuilder<void>(
-        future: _fetchDataFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error loading data: ${snapshot.error}'));
-          } else {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  if (!showPersonalInfo) ...[
-                    GestureDetector(
-                      onTap: isEditing ? _pickImage : null,
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: _image != null
-                            ? FileImage(_image!)
-                            : const AssetImage('assets/profile_photo.png')
-                                as ImageProvider,
-                        child: isEditing
-                            ? const Icon(
-                                Icons.edit,
-                                color: Colors.white,
-                                size: 30,
-                              )
-                            : null,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Hi, ${nameController.text.isEmpty ? 'user' : nameController.text}',
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: _togglePersonalInfo,
-                      child: const Text('Personal Information'),
-                    ),
-                  ],
-                  if (showPersonalInfo) ...[
-                    const SizedBox(height: 20),
-                    _buildTextField('Name', nameController),
-                    _buildTextField('Age', ageController,
-                        inputType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ]),
-                    if (ageError != null)
-                      Text(
-                        ageError!,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    _buildDropdownField('Select Race', selectedRace,
-                        ['Malay', 'Chinese', 'India', 'Others'], (value) {
-                      setState(() {
-                        selectedRace = value;
-                      });
-                    }),
-                    _buildDropdownField('Select Religion', selectedReligion, [
-                      'Buddha',
-                      'Christian',
-                      'Hindu',
-                      'Islam',
-                      'Others'
-                    ], (value) {
-                      setState(() {
-                        selectedReligion = value;
-                      });
-                    }),
-                    _buildTextField('Phone Number', phoneNumberController,
-                        inputType: TextInputType.phone,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ]),
-                    if (phoneNumberError != null)
-                      Text(
-                        phoneNumberError!,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    _buildTextField('Email', emailController,
-                        inputType: TextInputType.emailAddress),
-                    _buildTextField('Home Address', homeAddressController),
-                    const SizedBox(height: 20),
-                    if (isEditing)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ElevatedButton(
-                            onPressed: _applyChanges,
-                            child: const Text('Apply'),
-                          ),
-                          ElevatedButton(
-                            onPressed: _cancelChanges,
-                            child: const Text('Cancel'),
-                          ),
-                        ],
-                      ),
-                    if (!isEditing)
-                      ElevatedButton(
-                        onPressed: _toggleEditing,
-                        child: const Text('Edit Profile'),
-                      ),
-                  ],
-                ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            if (!showPersonalInfo) ...[
+              GestureDetector(
+                onTap: isEditing ? _pickImage : null,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: _image != null
+                      ? FileImage(_image!)
+                      : const AssetImage('assets/profile_photo.png')
+                          as ImageProvider,
+                  child: isEditing
+                      ? const Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                          size: 30,
+                        )
+                      : null,
+                ),
               ),
-            );
-          }
-        },
+              const SizedBox(height: 10),
+              Text(
+                'Hi, ${nameController.text.isEmpty ? 'user' : nameController.text}',
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _togglePersonalInfo,
+                child: const Text('Personal Information'),
+              ),
+            ],
+            if (showPersonalInfo) ...[
+              const SizedBox(height: 20),
+              _buildTextField('Name', nameController),
+              _buildTextField('Age', ageController,
+                  inputType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
+              if (ageError != null)
+                Text(
+                  ageError!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              _buildDropdownField('Select Race', selectedRace,
+                  ['Malay', 'Chinese', 'India', 'Others'], (value) {
+                setState(() {
+                  selectedRace = value;
+                });
+              }),
+              _buildDropdownField('Select Religion', selectedReligion,
+                  ['Buddha', 'Christian', 'Hindu', 'Islam', 'Others'], (value) {
+                setState(() {
+                  selectedReligion = value;
+                });
+              }),
+              _buildTextField('Phone Number', phoneNumberController,
+                  inputType: TextInputType.phone,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
+              if (phoneNumberError != null)
+                Text(
+                  phoneNumberError!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              _buildTextField('Email', emailController,
+                  inputType: TextInputType.emailAddress),
+              _buildTextField('Home Address', homeAddressController),
+              const SizedBox(height: 20),
+              if (isEditing)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _applyChanges,
+                      child: const Text('Apply'),
+                    ),
+                    ElevatedButton(
+                      onPressed: _cancelChanges,
+                      child: const Text('Cancel'),
+                    ),
+                  ],
+                ),
+              if (!isEditing)
+                ElevatedButton(
+                  onPressed: _toggleEditing,
+                  child: const Text('Edit Profile'),
+                ),
+            ],
+          ],
+        ),
       ),
     );
   }
