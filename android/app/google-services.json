@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "558485904004",
+    "project_id": "sapusenangauth",
+    "storage_bucket": "sapusenangauth.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558485904004:android:3b37b13431ea16846dc0d1",
+        "android_client_info": {
+          "package_name": "com.example.sa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHl787-zihDJdHXwnjL6UovIAupMLiuvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558485904004:android:76aed13f309fc82f6dc0d1",
+        "android_client_info": {
+          "package_name": "com.example.smart_transportation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHl787-zihDJdHXwnjL6UovIAupMLiuvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
