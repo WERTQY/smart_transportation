@@ -14,7 +14,7 @@ class DriverPanelWidget extends StatefulWidget {
   final PanelController panelController;
   final GoogleMapController mapController;
 
-  DriverPanelWidget({
+  const DriverPanelWidget({
     super.key,
     required this.controller,
     required this.panelController,
@@ -83,7 +83,9 @@ class _DriverPanelWidgetState extends State<DriverPanelWidget> {
   void sentOrder() {
     confirmOrder = true;
     pickupController.addListener(() {
-      print('Text input: ${pickupController.text}');
+      if (kDebugMode) {
+        print('Text input: ${pickupController.text}');
+      }
     });
     if (kDebugMode) {
       print('Order Sent');
@@ -108,7 +110,9 @@ class _DriverPanelWidgetState extends State<DriverPanelWidget> {
     numberController.clear();
     hasCarPool = false;
     pickupController.addListener(() {
-      print('Text input: ${pickupController.text}');
+      if (kDebugMode) {
+        print('Text input: ${pickupController.text}');
+      }
     });
     if (kDebugMode) {
       print('Order cancel');

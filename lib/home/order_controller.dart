@@ -20,11 +20,12 @@ class OrderController extends GetxController {
   TimeOfDay timeOfDay = TimeOfDay.now();
   bool hasCarPool = false;
   bool confirmOrder = false;
-  bool canConfirmOder = false;
+  bool canConfirmOrder = true;
+  bool hasBeenTaken = false;
 
   late GoogleMapController mapController;
   LatLng pickupLocation = const LatLng(0, 0);
-  LatLng destination = const LatLng(0, 0);
+  LatLng destinationLocation = const LatLng(0, 0);
   LatLng passengerLocation = const LatLng(0, 0);
   LatLng driverLocation = const LatLng(0, 0);
 
@@ -48,6 +49,8 @@ class OrderController extends GetxController {
     phoneController.text = "3";
     amountController.text = "100";
     orderCollection = firestore.collection('order');
+    OrderDetails orderDetails = await fetchSpecificOrderDetails("12");
+    writeOrderDetailsIntoController(orderDetails);
     _getCurrentLocation();
     super.onInit();
   }
@@ -96,16 +99,84 @@ class OrderController extends GetxController {
       pickup: pickupController.text,
       destination: destinationController.text,
       time: timeController.text,
+      number: int.parse(numberController.text),
       timeOfDay: TimeOfOrderDay(hour: timeOfDay.hour, minute: timeOfDay.minute),
       hasCarPool: hasCarPool,
       confirmOrder: confirmOrder,
-      canConfirmOrder: canConfirmOder,
+      canConfirmOrder: canConfirmOrder,
+      hasBeenTaken: hasBeenTaken,
       pickupLocation: OrderLocation(lat: pickupLocation.latitude, lng: pickupLocation.longitude),
-      destinationLocation: OrderLocation(lat: destination.latitude, lng: destination.longitude),
+      destinationLocation: OrderLocation(lat: destinationLocation.latitude, lng: destinationLocation.longitude),
       passengerLocation: OrderLocation(lat: passengerLocation.latitude, lng: passengerLocation.longitude),
       driverLocation: OrderLocation(lat: driverLocation.latitude, lng: driverLocation.longitude),
     );
     final orderJson = orderDetails.toJson();
     doc.set(orderJson);
   }
+
+  void cancelRide() {
+    orderIdController.clear();
+    nameController.clear();
+    phoneController.clear();
+    amountController.clear();
+    pickupController.clear();
+    destinationController.clear();
+    timeController.clear();
+    numberController.clear();
+
+    timeOfDay = TimeOfDay.now();
+    hasCarPool = false;
+    confirmOrder = false;
+    canConfirmOrder = true;
+    hasBeenTaken = false;
+
+    pickupLocation = const LatLng(0, 0);
+    destinationLocation = const LatLng(0, 0);
+    passengerLocation = const LatLng(0, 0);
+    driverLocation = const LatLng(0, 0);
+    FirebaseFirestore.instance.collection("order").doc(orderIdController.text).delete().then(
+      (doc) => print("Document deleted"),
+      onError: (e) => print("Error updating document $e"),
+    );
+  }
+
+  Future<OrderDetails> fetchSpecificOrderDetails(String orderId) async {
+    try {
+      DocumentReference doc = orderCollection.doc(orderId);
+      DocumentSnapshot snapshot = await doc.get();
+      if(snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        update();
+        return OrderDetails.fromJson(data);
+      }else{      
+        update();
+        OrderDetails orderDetails = OrderDetails();
+        orderDetails.resetToInitialState;
+        return orderDetails;
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  writeOrderDetailsIntoController(OrderDetails orderDetails) {
+    orderIdController.text = orderDetails.orderId!;
+      nameController.text = orderDetails.name!;
+      phoneController.text = orderDetails.phone!;
+      amountController.text = orderDetails.amount!.toString();
+      pickupController.text = orderDetails.pickup!;
+      destinationController.text = orderDetails.destination!;
+      timeController.text = orderDetails.time!;
+      numberController.text = orderDetails.number!.toString();
+      timeOfDay = TimeOfDay(hour: orderDetails.timeOfDay!.hour!, minute: orderDetails.timeOfDay!.minute!);
+      hasCarPool = orderDetails.hasCarPool!;
+      confirmOrder = orderDetails.confirmOrder!;
+      canConfirmOrder = orderDetails.canConfirmOrder!;
+      hasBeenTaken = orderDetails.hasBeenTaken!;
+      pickupLocation = LatLng(orderDetails.pickupLocation!.lat!, orderDetails.pickupLocation!.lng!);
+      destinationLocation = LatLng(orderDetails.destinationLocation!.lat!, orderDetails.destinationLocation!.lng!);
+      passengerLocation = LatLng(orderDetails.passengerLocation!.lat!, orderDetails.passengerLocation!.lng!);
+      driverLocation = LatLng(orderDetails.driverLocation!.lat!, orderDetails.driverLocation!.lng!);
+  }
+
 }

@@ -64,7 +64,7 @@ class _HomeMapState extends State<HomeMap> {
   @override
   Widget build(BuildContext context) {
     final panelHeightOpen = MediaQuery.of(context).size.height * 0.7;
-    final panelHeightClosed = 41.0;
+    const panelHeightClosed = 41.0;
 
     return Stack(
       alignment: Alignment.topCenter,

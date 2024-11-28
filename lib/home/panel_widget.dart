@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import 'package:smart_transportation/components/my_textfield.dart';
 import 'package:smart_transportation/components/location_controller.dart';
 import 'package:smart_transportation/components/order_button.dart';
 import 'package:smart_transportation/home/order_controller.dart';
-import 'package:smart_transportation/model/order_details.dart';
 
 class PanelWidget extends StatefulWidget {
   final ScrollController controller;
@@ -29,15 +27,6 @@ class PanelWidget extends StatefulWidget {
 }
 
 class _PanelWidgetState extends State<PanelWidget> {
-  //final pickupController = TextEditingController();
-  //final destinationController = TextEditingController();
-  //final timeController = TextEditingController();
-  //final numberController = TextEditingController();
-  //final user = FirebaseAuth.instance.currentUser!;
-  //var hasCarPool = false;
-  //TimeOfDay timeOfDay = TimeOfDay.now();
-  //var confirmOrder = false;
-  //var canConfirmOder = false;
   final OrderController controller = Get.find();
 
   @override
@@ -85,7 +74,9 @@ class _PanelWidgetState extends State<PanelWidget> {
   }
 
   void sentOrder(OrderController controller) {
-    controller.confirmOrder = true;
+    setState(() {
+      controller.confirmOrder = true;
+    });
 
     controller.orderRide();
 
@@ -105,15 +96,10 @@ class _PanelWidgetState extends State<PanelWidget> {
   }
 
   void cancelOrder(OrderController controller) {
-    controller.confirmOrder = false;
-    controller.pickupController.clear();
-    controller.destinationController.clear();
-    controller.timeController.clear();
-    controller.numberController.clear();
-    controller.hasCarPool = false;
-    controller.pickupController.addListener(() {
-      print('Text input: ${controller.pickupController.text}');
+    setState(() {
+      controller.cancelRide();
     });
+
     if (kDebugMode) {
       print('Order cancel');
     }
@@ -236,7 +222,7 @@ class _PanelWidgetState extends State<PanelWidget> {
       OrderButton(
         onTap: () => sentOrder(controller),
         text: 'Confirm Order',
-        isActive: controller.canConfirmOder,
+        isActive: controller.canConfirmOrder,
         timeController: controller.timeController,
         numberController: controller.numberController,
         destinationController: controller.destinationController,

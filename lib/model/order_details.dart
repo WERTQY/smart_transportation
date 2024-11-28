@@ -11,6 +11,7 @@ class OrderDetails {
   bool? hasCarPool;
   bool? confirmOrder;
   bool? canConfirmOrder;
+  bool? hasBeenTaken;
   OrderLocation? pickupLocation;
   OrderLocation? destinationLocation;
   OrderLocation? passengerLocation;
@@ -29,6 +30,7 @@ class OrderDetails {
       this.hasCarPool,
       this.confirmOrder,
       this.canConfirmOrder,
+      this.hasBeenTaken,
       this.pickupLocation,
       this.destinationLocation,
       this.passengerLocation,
@@ -49,6 +51,7 @@ class OrderDetails {
     hasCarPool = json['hasCarPool'];
     confirmOrder = json['confirmOrder'];
     canConfirmOrder = json['canConfirmOrder'];
+    hasBeenTaken = json['hasBeenTaken'];
     pickupLocation = json['pickupLocation'] != null
         ? new OrderLocation.fromJson(json['pickupLocation'])
         : null;
@@ -79,6 +82,7 @@ class OrderDetails {
     data['hasCarPool'] = this.hasCarPool;
     data['confirmOrder'] = this.confirmOrder;
     data['canConfirmOrder'] = this.canConfirmOrder;
+    data['hasBeenTaken'] = this.hasBeenTaken;
     if (this.pickupLocation != null) {
       data['pickupLocation'] = this.pickupLocation!.toJson();
     }
@@ -92,6 +96,28 @@ class OrderDetails {
       data['driverLocation'] = this.driverLocation!.toJson();
     }
     return data;
+  }
+
+  void resetToInitialState() {
+    orderId = "0";
+    name = "";
+    phone = "";
+    amount = 10;
+    pickup = "";
+    destination = "";
+    time = "";
+    number = 1;
+
+    timeOfDay = TimeOfOrderDay(hour: 0, minute: 0);
+    hasCarPool = false;
+    confirmOrder = false;
+    canConfirmOrder = true;
+    hasBeenTaken = false;
+
+    pickupLocation = OrderLocation(lat:  0, lng: 0);
+    destinationLocation = OrderLocation(lat:  0, lng: 0);
+    passengerLocation = OrderLocation(lat:  0, lng: 0);
+    driverLocation = OrderLocation(lat:  0, lng: 0);
   }
 }
 

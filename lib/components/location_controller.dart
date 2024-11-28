@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:smart_transportation/components/location_service.dart';
 
 class LocationController extends GetxController {
-  Placemark _pickPlaceMark = Placemark();
+  Placemark _pickPlaceMark = const Placemark();
   Placemark get pickPlaceMark => _pickPlaceMark;
 
   set pickPlaceMark(Placemark placemark) {
