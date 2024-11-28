@@ -6,7 +6,7 @@ import 'package:flutter_google_places_hoc081098/google_maps_webservice_places.da
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:smart_transportation/home/location_service.dart';
+import 'package:smart_transportation/components/location_service.dart';
 
 class LocationController extends GetxController {
   Placemark _pickPlaceMark = Placemark();

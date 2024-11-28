@@ -2,19 +2,25 @@ import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
-  final controller;
+  final TextEditingController controller;
   final String hintText;
   final bool obscureText;
   final Icon? icon;
   final Color? prefixIconColor;
+  final TextInputType keyboardType;
+  final Function()? onTap;
+  final bool readOnly;
 
   const MyTextField({
     super.key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
+    this.readOnly = false,
+    this.onTap,
     this.icon,
-    this.prefixIconColor
+    this.prefixIconColor,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -22,7 +28,10 @@ class MyTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
-        enableSuggestions: false,
+        readOnly: readOnly,
+        onTap: onTap,
+        keyboardType: keyboardType,
+        //enableSuggestions: false,
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(

@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:smart_transportation/home/location_controller.dart';
+import 'package:smart_transportation/components/location_controller.dart';
 
 class LocationSearchDialogue extends StatelessWidget {
   final GoogleMapController? mapController;
@@ -88,3 +89,4 @@ class LocationSearchDialogue extends StatelessWidget {
     );
   }
 }
+*/

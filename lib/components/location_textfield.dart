@@ -26,7 +26,7 @@ class LocationTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
-        enableSuggestions: false,
+        //enableSuggestions: false,
         autofocus: autoFocus,
         focusNode: focusNode,
         controller: controller,

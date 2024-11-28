@@ -5,7 +5,7 @@ import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:smart_transportation/components/location_textfield.dart';
-import 'package:smart_transportation/home/location_controller.dart';
+import 'package:smart_transportation/components/location_controller.dart';
 
 class MyLocationSearchDialogue extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
@@ -92,7 +92,6 @@ class MyLocationSearchDialogue extends StatelessWidget {
               subAdministrativeArea: placemark.subAdministrativeArea, // Sub administrative area
             );
 
-            print("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
             controller.text = suggestion.description!;
           }
         }*/

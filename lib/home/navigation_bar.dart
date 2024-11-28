@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:smart_transportation/home/location_controller.dart';
+import 'package:smart_transportation/components/location_controller.dart';
 import 'package:smart_transportation/home/map.dart';
 
 class HomeNavigationBar extends StatefulWidget {

@@ -7,7 +7,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:smart_transportation/components/my_location_search_dialogue.dart';
 import 'package:smart_transportation/components/my_button.dart';
 import 'package:smart_transportation/components/my_textfield.dart';
-import 'package:smart_transportation/home/location_controller.dart';
+import 'package:smart_transportation/components/location_controller.dart';
 
 class PanelWidget extends StatefulWidget {
   final ScrollController controller;
@@ -37,6 +37,8 @@ class _PanelWidgetState extends State<PanelWidget> {
   final user = FirebaseAuth.instance.currentUser!;
 
   var hasCarPool = false;
+
+  TimeOfDay timeOfDay = TimeOfDay.now();
 
   @override
   Widget build(BuildContext context) => GetBuilder<LocationController>(builder: (locationController) {
@@ -95,6 +97,8 @@ class _PanelWidgetState extends State<PanelWidget> {
 
           //time
           MyTextField(
+              onTap: _showTimePicker,
+              readOnly: true,
               controller: timeController,
               hintText: 'When?',
               obscureText: false,
@@ -105,6 +109,7 @@ class _PanelWidgetState extends State<PanelWidget> {
     
           //no. of passengers
           MyTextField(
+              keyboardType: TextInputType.number,
               controller: numberController,
               hintText: 'How Many?',
               obscureText: false,
@@ -183,5 +188,17 @@ class _PanelWidgetState extends State<PanelWidget> {
     if (kDebugMode) {
       print('Order Sent');
     }
+  }
+
+  void _showTimePicker() {
+    showTimePicker(
+      context: context, 
+      initialTime: TimeOfDay.now()
+      ).then((onValue) {
+        setState(() {
+          timeOfDay = onValue!;
+          timeController.text = timeOfDay.format(context);
+        });
+      });
   }
 }
