@@ -115,6 +115,10 @@ class OrderController extends GetxController {
   }
 
   void cancelRide() {
+    FirebaseFirestore.instance.collection("order").doc(orderIdController.text).delete().then(
+      (doc) => print("Document deleted"),
+      onError: (e) => print("Error updating document $e"),
+    );
     orderIdController.clear();
     nameController.clear();
     phoneController.clear();
@@ -134,10 +138,7 @@ class OrderController extends GetxController {
     destinationLocation = const LatLng(0, 0);
     passengerLocation = const LatLng(0, 0);
     driverLocation = const LatLng(0, 0);
-    FirebaseFirestore.instance.collection("order").doc(orderIdController.text).delete().then(
-      (doc) => print("Document deleted"),
-      onError: (e) => print("Error updating document $e"),
-    );
+
   }
 
   Future<OrderDetails> fetchSpecificOrderDetails(String orderId) async {
@@ -149,9 +150,9 @@ class OrderController extends GetxController {
         update();
         return OrderDetails.fromJson(data);
       }else{      
-        update();
         OrderDetails orderDetails = OrderDetails();
         orderDetails.resetToInitialState;
+        update();
         return orderDetails;
       }
     } catch (e) {
