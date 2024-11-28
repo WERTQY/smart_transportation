@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_transportation/components/location_controller.dart';
-import 'package:smart_transportation/home/map.dart';
+import 'package:smart_transportation/backups/map.dart';
 
 class DriverNavigationBar extends StatefulWidget {
   const DriverNavigationBar({super.key});

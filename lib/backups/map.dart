@@ -87,7 +87,8 @@ class _HomeMapState extends State<HomeMap> {
             myLocationButtonEnabled: false,
             zoomControlsEnabled: false,
             initialCameraPosition: CameraPosition(
-              target: currentLocation == null? _center : LatLng(currentLocation!.latitude!, currentLocation!.longitude!),                zoom: 17.5,
+              target: currentLocation == null? _center : LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+              zoom: 17.5,
             ),
           ), 
           panelBuilder: (controller) => FutureBuilder<GoogleMapController>(
