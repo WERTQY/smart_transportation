@@ -10,6 +10,7 @@ class MyTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final Function()? onTap;
   final bool readOnly;
+  final bool canRequestFocus;
 
   const MyTextField({
     super.key,
@@ -21,6 +22,7 @@ class MyTextField extends StatelessWidget {
     this.icon,
     this.prefixIconColor,
     this.keyboardType = TextInputType.text,
+    this.canRequestFocus = true,
   });
 
   @override
@@ -28,6 +30,7 @@ class MyTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
+        canRequestFocus: canRequestFocus,
         readOnly: readOnly,
         onTap: onTap,
         keyboardType: keyboardType,

@@ -15,9 +15,9 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
 
   List<Widget> body = const [
     HomeMap(),
-    Text("driver"),
     Text("route"),
     Text("info"),
+    Text("chat"),
     Text("profile"),
   ];
 
@@ -42,9 +42,6 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
         items: const [
           BottomNavigationBarItem(
             label: 'Transport',
-            icon: Icon(Icons.car_crash)),
-          BottomNavigationBarItem(
-            label: 'Driver',
             icon: Icon(Icons.drive_eta)),
           BottomNavigationBarItem(
             label: 'Route',
@@ -52,6 +49,9 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
           BottomNavigationBarItem(
             label: 'Info',
             icon: Icon(Icons.info)),
+            BottomNavigationBarItem(
+            label: 'Chat',
+            icon: Icon(Icons.chat)),
           BottomNavigationBarItem(
             label: 'Profile',
             icon: Icon(Icons.person)),
