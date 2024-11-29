@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_transportation/components/my_button.dart';
-import 'package:smart_transportation/components/my_textfield.dart';
-import 'package:smart_transportation/components/square_tile.dart';
+import 'package:smart_transportation/components/generic/styled_button.dart';
+import 'package:smart_transportation/components/generic/styled_textfield.dart';
+import 'package:smart_transportation/components/generic/square_tile.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -20,61 +20,67 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // sign user Up method
   void signUserUp() async {
-    //show loading circle
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
-
-    //check pswrd is confirmed
     if (passwordController.text != confirmpasswordController.text) {
-      Navigator.pop(context);
+      //Navigator.pop(context);
       showErrorMessage("Passwords Do Not Match!");
-    }
-    Navigator.pop(context);
+    } else {
+      try {
+        //show loading circle
+        showDialog(
+            context: context,
+            builder: (context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            });
 
-    //try creating user
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
-    } on FirebaseAuthException catch (e) {
-      //pop the laoding circle
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text);
+        // ignore: use_build_context_synchronously
+        if (mounted) {
+          // Dismiss the loading circle
+          Navigator.pop(context);
+        }
+      } on FirebaseAuthException catch (e) {
+        //pop the laoding circle
+        // ignore: use_build_context_synchronously
+        if (mounted) {
+          // Dismiss the loading circle
+          Navigator.pop(context);
+          if (e.code == 'email-already-in-use') {
+            //show error to user
+            showErrorMessage('Email already registered');
 
-      //WRONG EMAIL
-      if (e.code == 'user-not-found') {
-        //show error to user
-        showErrorMessage('Incorrect Email');
-
-        ///WRONG PASSWORD
-      } else if (e.code == 'wrong-password') {
-        //show error to user
-        showErrorMessage('Incorrect Password');
+            ///WRONG PASSWORD
+          } else if (e.code == 'invalid-email') {
+            //show error to user
+            showErrorMessage('Invalid email');
+          }
+        }
       }
     }
   }
 
   //error message to the user
   void showErrorMessage(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.deepPurple,
-          title: Center(
-            child: Text(message,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                )),
-          ),
-        );
-      },
-    );
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(),
+            backgroundColor: Colors.white,
+            title: Center(
+              child: Text(message,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  )),
+            ),
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -113,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 25),
 
                 // email textfield
-                MyTextField(
+                StyledTextField(
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
@@ -122,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 10),
 
                 // password textfield
-                MyTextField(
+                StyledTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
@@ -131,7 +137,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 10),
 
                 // confirm password textfield
-                MyTextField(
+                StyledTextField(
                   controller: confirmpasswordController,
                   hintText: 'Confirm Password',
                   obscureText: true,
@@ -142,8 +148,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 25),
 
                 // sign up button
-                MyButton(
-                  onTap: signUserUp,
+                StyledButton(
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    signUserUp();
+                  },
                   text: 'Sign Up',
                 ),
 

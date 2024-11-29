@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MyTextField extends StatelessWidget {
+class StyledTextField extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final TextEditingController controller;
   final String hintText;
@@ -12,7 +12,7 @@ class MyTextField extends StatelessWidget {
   final bool readOnly;
   final bool canRequestFocus;
 
-  const MyTextField({
+  const StyledTextField({
     super.key,
     required this.controller,
     required this.hintText,

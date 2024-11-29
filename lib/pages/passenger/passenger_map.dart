@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:smart_transportation/home/panel_widget.dart';
-import 'package:smart_transportation/home/order_controller.dart';
+import 'package:smart_transportation/components/order/order_panel_widget.dart';
+import 'package:smart_transportation/components/order/order_controller.dart';
 
 class HomeMap extends StatefulWidget {
   const HomeMap({super.key});
@@ -56,7 +56,7 @@ class _HomeMapState extends State<HomeMap> {
                 future: orderController.controllerCompleter.future,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
-                    return PanelWidget(
+                    return OrderPanelWidget(
                       controller: controller,
                       panelController: panelController,
                       mapController: snapshot.data!, // Safe to use now

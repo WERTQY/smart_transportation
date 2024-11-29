@@ -6,7 +6,7 @@ import 'package:flutter_google_places_hoc081098/google_maps_webservice_places.da
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:smart_transportation/components/location_service.dart';
+import 'package:smart_transportation/components/location/location_service.dart';
 
 class LocationController extends GetxController {
   Placemark _pickPlaceMark = const Placemark();
@@ -23,7 +23,6 @@ class LocationController extends GetxController {
     if(text.isNotEmpty){
       http.Response response = await getLocationData(text);
       var data = jsonDecode(response.body.toString());
-      //print("mt status is " + data["status"]);
       if(data['status'] == 'OK') {
         _predictionList = [];
         data['predictions'].forEach((prediction)

@@ -98,15 +98,15 @@ class OrderDetails {
     return data;
   }
 
-  void resetToInitialState() {
+  void reset() {
     orderId = "0";
     name = "";
     phone = "";
-    amount = 10;
+    amount = 0;
     pickup = "";
     destination = "";
     time = "";
-    number = 1;
+    number = 0;
 
     timeOfDay = TimeOfOrderDay(hour: 0, minute: 0);
     hasCarPool = false;

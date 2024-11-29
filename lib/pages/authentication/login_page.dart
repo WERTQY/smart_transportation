@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_transportation/components/my_button.dart';
-import 'package:smart_transportation/components/my_textfield.dart';
-import 'package:smart_transportation/components/square_tile.dart';
-import 'package:smart_transportation/pages/reset_password_page.dart';
+import 'package:smart_transportation/components/generic/styled_button.dart';
+import 'package:smart_transportation/components/generic/styled_textfield.dart';
+import 'package:smart_transportation/components/generic/square_tile.dart';
+import 'package:smart_transportation/pages/authentication/reset_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -20,55 +20,64 @@ class _LoginPageState extends State<LoginPage> {
 
   // sign user in method
   void signUserIn() async {
-    //show loading circle
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
-
     try {
+      //show loading circle
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          });
+
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
       // ignore: use_build_context_synchronously
-      Navigator.pop(context);
+      if (mounted) {
+        // Dismiss the loading circle
+        Navigator.pop(context);
+      }
     } on FirebaseAuthException catch (e) {
       //pop the laoding circle
       // ignore: use_build_context_synchronously
-      Navigator.pop(context);
+      if (mounted) {
+        // Dismiss the loading circle
+        Navigator.pop(context);
+        if (e.code == 'invalid-email' || e.code == 'user-not-found') {
+          //show error to user
+          showErrorMessage('Incorrect email');
 
-      //WRONG EMAIL
-      if (e.code == 'user-not-found') {
-        //show error to user
-        showErrorMessage('Incorrect Email');
-
-        ///WRONG PASSWORD
-      } else if (e.code == 'wrong-password') {
-        //show error to user
-        showErrorMessage('Incorrect Password');
+          ///WRONG PASSWORD
+        } else if (e.code == 'wrong-password') {
+          //show error to user
+          showErrorMessage('Incorrect password');
+        }
       }
+    } finally {
+      
     }
   }
 
   //error message to the user
   void showErrorMessage(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.deepPurple,
-          title: Center(
-            child: Text(message,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                )),
-          ),
-        );
-      },
-    );
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(),
+            backgroundColor: Colors.white,
+            title: Center(
+              child: Text(message,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  )),
+            ),
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -107,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 25),
 
                 // email textfield
-                MyTextField(
+                StyledTextField(
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
@@ -116,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 10),
 
                 // password textfield
-                MyTextField(
+                StyledTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
@@ -151,10 +160,12 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 25),
 
                 // sign in button
-                MyButton(
-                  text: 'Sign In',
-                  onTap: signUserIn,
-                ),
+                StyledButton(
+                    text: 'Sign In',
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      signUserIn();
+                    }),
 
                 const SizedBox(height: 50),
 

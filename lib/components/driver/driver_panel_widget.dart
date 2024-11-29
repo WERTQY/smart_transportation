@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:smart_transportation/components/my_location_search_dialogue.dart';
-import 'package:smart_transportation/components/my_textfield.dart';
-import 'package:smart_transportation/components/location_controller.dart';
-import 'package:smart_transportation/components/order_button.dart';
+import 'package:smart_transportation/components/location/location_search_dialogue.dart';
+import 'package:smart_transportation/components/generic/styled_textfield.dart';
+import 'package:smart_transportation/components/location/location_controller.dart';
+import 'package:smart_transportation/components/order/order_button.dart';
 
 class DriverPanelWidget extends StatefulWidget {
   final ScrollController controller;
@@ -148,7 +148,7 @@ class _DriverPanelWidgetState extends State<DriverPanelWidget> {
         const SizedBox(height: 25),
 
         //pickup
-        MyTextField(
+        StyledTextField(
           canRequestFocus: false,
           readOnly: true,
           controller: pickupController,
@@ -160,7 +160,7 @@ class _DriverPanelWidgetState extends State<DriverPanelWidget> {
         const SizedBox(height: 30),
 
         //destination
-        MyTextField(
+        StyledTextField(
           canRequestFocus: false,
           readOnly: true,
           controller: destinationController,
@@ -172,7 +172,7 @@ class _DriverPanelWidgetState extends State<DriverPanelWidget> {
         const SizedBox(height: 30),
 
         //time
-        MyTextField(
+        StyledTextField(
           canRequestFocus: false,
           readOnly: true,
           controller: timeController,
@@ -184,7 +184,7 @@ class _DriverPanelWidgetState extends State<DriverPanelWidget> {
         const SizedBox(height: 30),
 
         //no. of passengers
-        MyTextField(
+        StyledTextField(
           canRequestFocus: false,
           readOnly: true,
           keyboardType: TextInputType.number,
@@ -258,7 +258,7 @@ class _DriverPanelWidgetState extends State<DriverPanelWidget> {
         const SizedBox(height: 25),
 
         //pickup
-        MyLocationSearchDialogue(
+        LocationSearchDialogue(
           controller: pickupController,
           hintText: 'Pickup At? ',
           obscureText: false,
@@ -269,7 +269,7 @@ class _DriverPanelWidgetState extends State<DriverPanelWidget> {
         const SizedBox(height: 30),
 
         //destination
-        MyLocationSearchDialogue(
+        LocationSearchDialogue(
           controller: destinationController,
           hintText: 'Where To?',
           obscureText: false,
@@ -280,7 +280,7 @@ class _DriverPanelWidgetState extends State<DriverPanelWidget> {
         const SizedBox(height: 30),
 
         //time
-        MyTextField(
+        StyledTextField(
           onTap: _showTimePicker,
           readOnly: true,
           controller: timeController,
@@ -292,7 +292,7 @@ class _DriverPanelWidgetState extends State<DriverPanelWidget> {
         const SizedBox(height: 30),
 
         //no. of passengers
-        MyTextField(
+        StyledTextField(
           keyboardType: TextInputType.number,
           controller: numberController,
           hintText: 'How Many?',

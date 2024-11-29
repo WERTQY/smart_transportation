@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smart_transportation/pages/login_page.dart';
-import 'package:smart_transportation/pages/register_page.dart';
+import 'package:smart_transportation/pages/authentication/login_page.dart';
+import 'package:smart_transportation/pages/authentication/register_page.dart';
 
 class LoginOrRegisterPage extends StatefulWidget {
   const LoginOrRegisterPage({super.key});

@@ -4,10 +4,10 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:smart_transportation/components/location_textfield.dart';
-import 'package:smart_transportation/components/location_controller.dart';
+import 'package:smart_transportation/components/location/location_textfield.dart';
+import 'package:smart_transportation/components/location/location_controller.dart';
 
-class MyLocationSearchDialogue extends StatelessWidget {
+class LocationSearchDialogue extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final controller;
   final String hintText;
@@ -16,7 +16,7 @@ class MyLocationSearchDialogue extends StatelessWidget {
   final Color? prefixIconColor;
   final GoogleMapController mapController;
 
-  const MyLocationSearchDialogue({
+  const LocationSearchDialogue({
     super.key,
     required this.controller,
     required this.hintText,

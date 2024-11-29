@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_transportation/pages/home_page.dart';
-import 'package:smart_transportation/pages/login_or_register.dart';
+import 'package:smart_transportation/pages/authentication/switch_page.dart';
+import 'package:smart_transportation/pages/authentication/login_or_register.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -14,7 +14,7 @@ class AuthPage extends StatelessWidget {
         builder: (context, snapshot) {
           //user is logged in
           if (snapshot.hasData) {
-            return HomePage();
+            return const SwitchPage();
           }
           //user is NOT logged in
           else {

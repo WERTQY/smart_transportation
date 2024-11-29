@@ -1,21 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:smart_transportation/components/my_location_search_dialogue.dart';
-import 'package:smart_transportation/components/my_textfield.dart';
-import 'package:smart_transportation/components/location_controller.dart';
-import 'package:smart_transportation/components/order_button.dart';
-import 'package:smart_transportation/home/order_controller.dart';
+import 'package:smart_transportation/components/location/location_search_dialogue.dart';
+import 'package:smart_transportation/components/generic/styled_textfield.dart';
+import 'package:smart_transportation/components/location/location_controller.dart';
+import 'package:smart_transportation/components/order/order_button.dart';
+import 'package:smart_transportation/components/order/order_controller.dart';
 
-class PanelWidget extends StatefulWidget {
+class OrderPanelWidget extends StatefulWidget {
   final ScrollController controller;
   final PanelController panelController;
   final GoogleMapController mapController;
 
-  PanelWidget({
+  const OrderPanelWidget({
     super.key,
     required this.controller,
     required this.panelController,
@@ -23,10 +22,10 @@ class PanelWidget extends StatefulWidget {
   });
 
   @override
-  State<PanelWidget> createState() => _PanelWidgetState();
+  State<OrderPanelWidget> createState() => _OrderPanelWidgetState();
 }
 
-class _PanelWidgetState extends State<PanelWidget> {
+class _OrderPanelWidgetState extends State<OrderPanelWidget> {
   final OrderController controller = Get.find();
 
   @override
@@ -39,6 +38,7 @@ class _PanelWidgetState extends State<PanelWidget> {
               FocusScope.of(context).unfocus();
             },
             child: ListView(
+              physics: const NeverScrollableScrollPhysics(),
               controller: widget.controller,
               padding: EdgeInsets.zero,
               children: buildPanelWidget(controller),
@@ -67,10 +67,6 @@ class _PanelWidgetState extends State<PanelWidget> {
     } else {
       widget.panelController.open();
     }
-  }
-
-  void signUserOut() {
-    FirebaseAuth.instance.signOut();
   }
 
   void sentOrder(OrderController controller) {
@@ -122,10 +118,10 @@ class _PanelWidgetState extends State<PanelWidget> {
       const SizedBox(
         height: 11,
       ),
-      Row(
+      const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             "  Book Ride",
             style: TextStyle(
               fontSize: 35,
@@ -134,13 +130,12 @@ class _PanelWidgetState extends State<PanelWidget> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          IconButton(onPressed: signUserOut, icon: const Icon(Icons.logout)),
         ],
       ),
       const SizedBox(height: 25),
 
       //pickup
-      MyLocationSearchDialogue(
+      LocationSearchDialogue(
         controller: controller.pickupController,
         hintText: 'Pickup At? ',
         obscureText: false,
@@ -151,7 +146,7 @@ class _PanelWidgetState extends State<PanelWidget> {
       const SizedBox(height: 30),
 
       //destination
-      MyLocationSearchDialogue(
+      LocationSearchDialogue(
         controller: controller.destinationController,
         hintText: 'Where To?',
         obscureText: false,
@@ -162,7 +157,7 @@ class _PanelWidgetState extends State<PanelWidget> {
       const SizedBox(height: 30),
 
       //time
-      MyTextField(
+      StyledTextField(
         onTap: () => _showTimePicker(controller),
         readOnly: true,
         controller: controller.timeController,
@@ -174,7 +169,7 @@ class _PanelWidgetState extends State<PanelWidget> {
       const SizedBox(height: 30),
 
       //no. of passengers
-      MyTextField(
+      StyledTextField(
         keyboardType: TextInputType.number,
         controller: controller.numberController,
         hintText: 'How Many?',
@@ -240,10 +235,10 @@ class _PanelWidgetState extends State<PanelWidget> {
       const SizedBox(
         height: 11,
       ),
-      Row(
+      const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             "  Ride Details",
             style: TextStyle(
               fontSize: 35,
@@ -252,13 +247,12 @@ class _PanelWidgetState extends State<PanelWidget> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          IconButton(onPressed: signUserOut, icon: const Icon(Icons.logout)),
         ],
       ),
       const SizedBox(height: 25),
 
       //pickup
-      MyTextField(
+      StyledTextField(
         canRequestFocus: false,
         readOnly: true,
         controller: controller.pickupController,
@@ -270,7 +264,7 @@ class _PanelWidgetState extends State<PanelWidget> {
       const SizedBox(height: 30),
 
       //destination
-      MyTextField(
+      StyledTextField(
         canRequestFocus: false,
         readOnly: true,
         controller: controller.destinationController,
@@ -282,7 +276,7 @@ class _PanelWidgetState extends State<PanelWidget> {
       const SizedBox(height: 30),
 
       //time
-      MyTextField(
+      StyledTextField(
         canRequestFocus: false,
         readOnly: true,
         controller: controller.timeController,
@@ -294,7 +288,7 @@ class _PanelWidgetState extends State<PanelWidget> {
       const SizedBox(height: 30),
 
       //no. of passengers
-      MyTextField(
+      StyledTextField(
         canRequestFocus: false,
         readOnly: true,
         keyboardType: TextInputType.number,
