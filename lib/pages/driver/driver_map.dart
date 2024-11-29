@@ -1,41 +1,64 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:smart_transportation/components/order/order_panel_widget.dart';
 
-class DriverHomeMap extends StatefulWidget {
-  const DriverHomeMap({super.key});
+class DriverMap extends StatefulWidget {
+  const DriverMap({super.key});
 
   @override
-  State<DriverHomeMap> createState() => _DriverHomeMapState();
+  State<DriverMap> createState() => _DriverMapState();
 }
 
-class _DriverHomeMapState extends State<DriverHomeMap> {
-  late GoogleMapController mapController;
+class _DriverMapState extends State<DriverMap> {
+  late GoogleMapController mapController; 
+  final Completer<GoogleMapController> _controllerCompleter = Completer<GoogleMapController>();
 
   final LatLng _center = const LatLng(3.1220007402224543, 101.65689475884037);
   LocationData? currentLocation;
 
-  void _getCurrentLocation() {
+  final panelController = PanelController();
+  static const double fabHeightClosed = 60;
+  double fabHeight = fabHeightClosed;
+
+  void _getCurrentLocation () {
     Location location = Location();
 
-    location.getLocation().then((location) {
-      setState(() {
-        currentLocation = location;
-      });
-      _moveToCurrentLocation();
-    });
+    location.getLocation().then(
+      (location) {
+        setState(() {
+          currentLocation = location; 
+        });
+        _moveToCurrentLocation();
+      },
+    );
   }
 
-  void _moveToCurrentLocation() {
+  @override
+  void initState(){
+    super.initState();
+    _getCurrentLocation();
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controllerCompleter.complete(controller);
+    mapController = controller;
     if (currentLocation != null) {
-      mapController.animateCamera(
-        CameraUpdate.newLatLng(
-          LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-        ),
-      );
+      _moveToCurrentLocation();
     }
+  }
+
+  void _moveToCurrentLocation() async {
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+        zoom: 17.5,
+      ),
+    ));
   }
 
   @override
@@ -89,4 +112,10 @@ class _DriverHomeMapState extends State<DriverHomeMap> {
       ]
     );
   }
+
+  Widget buildFAB(BuildContext context) => FloatingActionButton(
+    onPressed: _moveToCurrentLocation,
+    backgroundColor: Colors.white,
+    child: const Icon(Icons.my_location),
+  );
 }
