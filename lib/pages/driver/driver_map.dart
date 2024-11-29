@@ -1,64 +1,41 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:smart_transportation/components/order/order_panel_widget.dart';
 
-class DriverMap extends StatefulWidget {
-  const DriverMap({super.key});
+class DriverHomeMap extends StatefulWidget {
+  const DriverHomeMap({super.key});
 
   @override
-  State<DriverMap> createState() => _DriverMapState();
+  State<DriverHomeMap> createState() => _DriverHomeMapState();
 }
 
-class _DriverMapState extends State<DriverMap> {
-  late GoogleMapController mapController; 
-  final Completer<GoogleMapController> _controllerCompleter = Completer<GoogleMapController>();
+class _DriverHomeMapState extends State<DriverHomeMap> {
+  late GoogleMapController mapController;
 
   final LatLng _center = const LatLng(3.1220007402224543, 101.65689475884037);
   LocationData? currentLocation;
 
-  final panelController = PanelController();
-  static const double fabHeightClosed = 60;
-  double fabHeight = fabHeightClosed;
-
-  void _getCurrentLocation () {
+  void _getCurrentLocation() {
     Location location = Location();
 
-    location.getLocation().then(
-      (location) {
-        setState(() {
-          currentLocation = location; 
-        });
-        _moveToCurrentLocation();
-      },
-    );
-  }
-
-  @override
-  void initState(){
-    super.initState();
-    _getCurrentLocation();
-  }
-
-  void _onMapCreated(GoogleMapController controller) {
-    _controllerCompleter.complete(controller);
-    mapController = controller;
-    if (currentLocation != null) {
+    location.getLocation().then((location) {
+      setState(() {
+        currentLocation = location;
+      });
       _moveToCurrentLocation();
-    }
+    });
   }
 
-  void _moveToCurrentLocation() async {
-    mapController.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        bearing: 0,
-        target: LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-        zoom: 17.5,
-      ),
-    ));
+  void _moveToCurrentLocation() {
+    if (currentLocation != null) {
+      mapController.animateCamera(
+        CameraUpdate.newLatLng(
+          LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+        ),
+      );
+    }
   }
 
   @override
@@ -112,10 +89,4 @@ class _DriverMapState extends State<DriverMap> {
       ]
     );
   }
-
-  Widget buildFAB(BuildContext context) => FloatingActionButton(
-    onPressed: _moveToCurrentLocation,
-    backgroundColor: Colors.white,
-    child: const Icon(Icons.my_location),
-  );
 }
