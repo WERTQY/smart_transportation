@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:smart_transportation/components/location_controller.dart';
-import 'package:smart_transportation/backups/map.dart';
+import 'package:smart_transportation/driver/driver_stats_page.dart';
+import 'package:smart_transportation/driver/driver_profile_page.dart';
+import 'package:smart_transportation/driver/driver_map.dart';
 
-class DriverNavigationBar extends StatefulWidget {
-  const DriverNavigationBar({super.key});
+class DriverHomeNavigationBar extends StatefulWidget {
+  const DriverHomeNavigationBar({super.key});
 
   @override
-  State<DriverNavigationBar> createState() => _DriverNavigationBarState();
+  State<DriverHomeNavigationBar> createState() =>
+      _DriverHomeNavigationBarState();
 }
 
-class _DriverNavigationBarState extends State<DriverNavigationBar> {
+class _DriverHomeNavigationBarState extends State<DriverHomeNavigationBar> {
   int _currentIndex = 0;
-
   List<Widget> body = const [
-    HomeMap(),
-    Text("route"),
-    Text("info"),
-    Text("chat"),
-    Text("profile"),
+    DriverHomeMap(),
+    DriverStatsPage(),
+    DriverProfilePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    Get.put(LocationController());
     return Scaffold(
       body: Center(
         child: body[_currentIndex],
@@ -32,7 +29,7 @@ class _DriverNavigationBarState extends State<DriverNavigationBar> {
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white, // Change background color
-        selectedItemColor: Colors.black, // Color for selected items
+        selectedItemColor: Colors.blue, // Color for selected items
         unselectedItemColor: Colors.grey, // Color for unselected items
         onTap: (int newIndex) {
           setState(() {
@@ -41,19 +38,12 @@ class _DriverNavigationBarState extends State<DriverNavigationBar> {
         },
         items: const [
           BottomNavigationBarItem(
-            label: 'Drive',
-            icon: Icon(Icons.car_crash)),
+              label: 'Booking', icon: Icon(Icons.car_crash)),
           BottomNavigationBarItem(
-            label: 'Info',
-            icon: Icon(Icons.info)),
-            BottomNavigationBarItem(
-            label: 'Chat',
-            icon: Icon(Icons.chat)),
-          BottomNavigationBarItem(
-            label: 'Profile',
-            icon: Icon(Icons.person)),
+              label: 'Stats', icon: Icon(Icons.attach_money)),
+          BottomNavigationBarItem(label: 'Profile', icon: Icon(Icons.person)),
         ],
-        ),
+      ),
     );
   }
 }

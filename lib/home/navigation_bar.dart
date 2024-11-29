@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_transportation/components/location_controller.dart';
 import 'package:smart_transportation/home/passenger_map.dart';
+import 'package:smart_transportation/home/passenger_profile.dart';
 
 class HomeNavigationBar extends StatefulWidget {
   const HomeNavigationBar({super.key});
@@ -18,7 +19,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
     Text("route"),
     Text("info"),
     Text("chat"),
-    Text("profile"),
+    PassengerProfile(),
   ];
 
   @override
@@ -41,22 +42,13 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
         },
         items: const [
           BottomNavigationBarItem(
-            label: 'Transport',
-            icon: Icon(Icons.drive_eta)),
-          BottomNavigationBarItem(
-            label: 'Route',
-            icon: Icon(Icons.route)),
-          BottomNavigationBarItem(
-            label: 'Info',
-            icon: Icon(Icons.info)),
-            BottomNavigationBarItem(
-            label: 'Chat',
-            icon: Icon(Icons.chat)),
-          BottomNavigationBarItem(
-            label: 'Profile',
-            icon: Icon(Icons.person)),
+              label: 'Transport', icon: Icon(Icons.drive_eta)),
+          BottomNavigationBarItem(label: 'Route', icon: Icon(Icons.route)),
+          BottomNavigationBarItem(label: 'Info', icon: Icon(Icons.info)),
+          BottomNavigationBarItem(label: 'Chat', icon: Icon(Icons.chat)),
+          BottomNavigationBarItem(label: 'Profile', icon: Icon(Icons.person)),
         ],
-        ),
+      ),
     );
   }
 }
