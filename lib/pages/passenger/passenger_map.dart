@@ -4,15 +4,16 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:smart_transportation/components/order/order_panel_widget.dart';
 import 'package:smart_transportation/components/order/order_controller.dart';
+import 'package:smart_transportation/components/profile/profile_controller.dart';
 
-class HomeMap extends StatefulWidget {
-  const HomeMap({super.key});
+class PassengerMap extends StatefulWidget {
+  const PassengerMap({super.key});
 
   @override
-  State<HomeMap> createState() => _HomeMapState();
+  State<PassengerMap> createState() => _PassengerMapState();
 }
 
-class _HomeMapState extends State<HomeMap> {
+class _PassengerMapState extends State<PassengerMap> {
   final panelController = PanelController();
   static const double fabHeightClosed = 60;
   double fabHeight = fabHeightClosed;
@@ -22,9 +23,13 @@ class _HomeMapState extends State<HomeMap> {
     final panelHeightOpen = MediaQuery.of(context).size.height * 0.7;
     final panelHeightClosed = 41.0;
 
+    ProfileController profileController = Get.find();
+
     return GetBuilder<OrderController>(
       init: OrderController(), // Initialize the controller
       builder: (orderController) {
+        orderController.nameController.text = profileController.nameController.text;
+        orderController.phoneController.text = profileController.phoneController.text;
         return Stack(
           alignment: Alignment.topCenter,
           children: <Widget>[

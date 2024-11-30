@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_transportation/model/user_information.dart';
 
-class ProfileController extends GetxController {
-  var currentIndex = 2.obs;
+class DriverController extends GetxController {
+  var currentIndex = 1.obs;
   var isLoading = true.obs;
   var firstFetch = true;
 
@@ -55,12 +55,12 @@ class ProfileController extends GetxController {
 
     ever(currentIndex, (index) async {
       // Trigger the fetch operation when switching to a specific index
-      if (index == 4 && !firstTimeLogin!) {
-        print("Changing page fetching tiggered");
+      if (index == 4) {
         UserInformation userInformation = await fetchSpecificOrderDetails(userId);
         writeUserInformationIntoController(userInformation);
       }
     });
+
     orderCollection = firestore.collection('userInformation');
     UserInformation userInformation = await fetchSpecificOrderDetails(userId);
     writeUserInformationIntoController(userInformation);
@@ -104,7 +104,6 @@ class ProfileController extends GetxController {
         Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
         UserInformation userInformation = UserInformation.fromJson(data);
         if(userInformation.firstTimeLogin == true) {
-          print("SHOWING DIALOG 1");
           Future.delayed(Duration.zero, showProfileCompletionFormDialog);
         }
         update();
@@ -115,7 +114,6 @@ class ProfileController extends GetxController {
         userInformation.userId = userId;
         userInformation.email = email;
         applyNewUserInformation(userInformation);
-        print("SHOWING DIALOG 2");
         Future.delayed(Duration.zero, showProfileCompletionFormDialog);
         update();
         return userInformation;
@@ -132,7 +130,7 @@ class ProfileController extends GetxController {
     Get.dialog(
       AlertDialog(
         title: const Text("First Time Login", style: TextStyle(fontWeight: FontWeight.bold)),
-        content: const Text('Please complete your profile before proceeding.'),
+        content: const Text('Please complete your profile 352 proceeding.'),
         actions: [
           TextButton(
             onPressed: () {

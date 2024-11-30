@@ -21,28 +21,16 @@ class _LoginPageState extends State<LoginPage> {
   // sign user in method
   void signUserIn() async {
     try {
-      //show loading circle
-      showDialog(
-          context: context,
-          builder: (context) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          });
 
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
       // ignore: use_build_context_synchronously
-      if (mounted) {
-        // Dismiss the loading circle
-        Navigator.pop(context);
-      }
+
     } on FirebaseAuthException catch (e) {
       //pop the laoding circle
       // ignore: use_build_context_synchronously
       if (mounted) {
         // Dismiss the loading circle
-        Navigator.pop(context);
         if (e.code == 'invalid-email' || e.code == 'user-not-found') {
           //show error to user
           showErrorMessage('Incorrect email');

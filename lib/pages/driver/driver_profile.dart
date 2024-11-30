@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:smart_transportation/components/generic/styled_button.dart';
+import 'package:smart_transportation/components/order/order_controller.dart';
 import 'package:smart_transportation/components/profile/profile_button.dart';
 import 'package:smart_transportation/components/profile/profile_textfield.dart';
-import 'package:smart_transportation/pages/driver/driver_home.dart';
+import 'package:smart_transportation/pages/authentication/login_or_register.dart';
+import 'package:smart_transportation/pages/authentication/switch_page.dart';
 import 'package:smart_transportation/components/profile/profile_controller.dart';
 
 class DriverProfile extends StatefulWidget {
@@ -22,19 +24,13 @@ class _DriverProfileState extends State<DriverProfile> {
   String? ageError;
   String? phoneNumberError;
 
-  @override
-  void initState() {
-    super.initState();
-
-    profileController.fetchSpecificOrderDetails(profileController.userId);
-  }
-
   void _switchToPassenger() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const DriverHome()),
-    );
+    Get.delete<OrderController>();
+    profileController.isDriver = false;
+    profileController.applyUserInformation();
+    Get.to(() => const SwitchPage(), preventDuplicates: false);
   }
+
 
   void _toggleEditing() {
     setState(() {
@@ -81,7 +77,11 @@ class _DriverProfileState extends State<DriverProfile> {
   }
 
   void signUserOut() {
-    FirebaseAuth.instance.signOut();
+    FirebaseAuth.instance.signOut().then((_) {
+      Get.delete<OrderController>();
+      //Get.delete<ProfileController>(); // Clear user data
+      //Get.to(const LoginOrRegisterPage()); // Navigate to login
+    });
   }
 
   @override
@@ -114,7 +114,7 @@ class _DriverProfileState extends State<DriverProfile> {
                 ),
                 onPressed: () {
                   setState(() {
-                    _cancelChanges();      
+                    _cancelChanges();
                   });
                 },
               )
@@ -155,7 +155,7 @@ class _DriverProfileState extends State<DriverProfile> {
                 prefixIconColor: Colors.black,
               ),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               ProfileTextField(
                 icon: const Icon(Icons.phone),
@@ -167,7 +167,31 @@ class _DriverProfileState extends State<DriverProfile> {
                 prefixIconColor: Colors.black,
               ),
               const SizedBox(
-                height: 20,
+                height: 10,
+              ),
+              ProfileTextField(
+                icon: const Icon(Icons.drive_eta),
+                readOnly: true,
+                controller: profileController.carModelController,
+                hintText: "",
+                obscureText: false,
+                canRequestFocus: false,
+                prefixIconColor: Colors.black,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ProfileTextField(
+                icon: const Icon(Icons.abc),
+                readOnly: true,
+                controller: profileController.carPlateController,
+                hintText: "",
+                obscureText: false,
+                canRequestFocus: false,
+                prefixIconColor: Colors.black,
+              ),
+              const SizedBox(
+                height: 10,
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -194,15 +218,13 @@ class _DriverProfileState extends State<DriverProfile> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: ProfileButton(
-                  text: "Switch To Driver",
-                  onPressed: () {},
+                  text: "Switch To Passenger",
+                  onPressed: _switchToPassenger,
                   arrowIcon: Icons.drive_eta,
                 ),
               ),
-              const Expanded(
-                child: SizedBox(
-                  height: 10,
-                ),
+              const SizedBox(
+                height: 10,
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -212,9 +234,6 @@ class _DriverProfileState extends State<DriverProfile> {
                   textColor: Colors.red,
                   arrowIcon: Icons.logout,
                 ),
-              ),
-              const SizedBox(
-                height: 40,
               ),
             ],
             if (showPersonalInfo) ...[
@@ -233,29 +252,38 @@ class _DriverProfileState extends State<DriverProfile> {
                       ageError!,
                       style: const TextStyle(color: Colors.red),
                     ),
-                    
-                  _buildDropdownField('Gender', profileController.selectedGender == ''? null : profileController.selectedGender, [
-                    'Male',
-                    'Female'
-                  ], (value) {
+                  _buildDropdownField(
+                      'Gender',
+                      profileController.selectedGender == ''
+                          ? null
+                          : profileController.selectedGender,
+                      ['Male', 'Female'], (value) {
                     setState(() {
                       profileController.selectedGender = value;
                     });
                   }),
-                  _buildDropdownField('Select Race', profileController.selectedRace == ''? null : profileController.selectedRace,
+                  _buildDropdownField(
+                      'Select Race',
+                      profileController.selectedRace == ''
+                          ? null
+                          : profileController.selectedRace,
                       ['Malay', 'Chinese', 'India', 'Others'], (value) {
                     setState(() {
                       profileController.selectedRace = value;
                     });
                   }),
-                  
-                  _buildTextField('Phone Number', profileController.phoneController,
-                      inputType: TextInputType.phone,),
+                  _buildTextField(
+                    'Phone Number',
+                    profileController.phoneController,
+                    inputType: TextInputType.phone,
+                  ),
                   if (phoneNumberError != null)
                     Text(
                       phoneNumberError!,
                       style: const TextStyle(color: Colors.red),
                     ),
+                  _buildTextField('Car Model', profileController.carModelController),
+                  _buildTextField('Car Plate', profileController.carPlateController),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

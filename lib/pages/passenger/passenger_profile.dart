@@ -2,10 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:smart_transportation/backups/order_controller.dart';
 import 'package:smart_transportation/components/generic/styled_button.dart';
 import 'package:smart_transportation/components/profile/profile_button.dart';
 import 'package:smart_transportation/components/profile/profile_textfield.dart';
-import 'package:smart_transportation/pages/driver/driver_home.dart';
+import 'package:smart_transportation/pages/authentication/login_or_register.dart';
+import 'package:smart_transportation/pages/authentication/switch_page.dart';
 import 'package:smart_transportation/components/profile/profile_controller.dart';
 
 class PassengerProfile extends StatefulWidget {
@@ -22,18 +24,11 @@ class _PassengerProfileState extends State<PassengerProfile> {
   String? ageError;
   String? phoneNumberError;
 
-  @override
-  void initState() {
-    super.initState();
-
-    profileController.fetchSpecificOrderDetails(profileController.userId);
-  }
-
   void _switchToDriver() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const DriverHome()),
-    );
+    Get.delete<OrderController>();
+    profileController.isDriver = true;
+    profileController.applyUserInformation();
+    Get.to(() => const SwitchPage(), preventDuplicates: false);
   }
 
   void _toggleEditing() {
@@ -81,7 +76,11 @@ class _PassengerProfileState extends State<PassengerProfile> {
   }
 
   void signUserOut() {
-    FirebaseAuth.instance.signOut();
+    FirebaseAuth.instance.signOut().then((_) {
+      Get.delete<OrderController>();
+      //Get.delete<ProfileController>(); // Clear user data
+      //Get.to(const LoginOrRegisterPage()); // Navigate to login
+    });
   }
 
   @override
@@ -114,7 +113,7 @@ class _PassengerProfileState extends State<PassengerProfile> {
                 ),
                 onPressed: () {
                   setState(() {
-                    _cancelChanges();      
+                    _cancelChanges();
                   });
                 },
               )
@@ -138,7 +137,7 @@ class _PassengerProfileState extends State<PassengerProfile> {
                 height: 10,
               ),
               Text(
-                'Hi, ${profileController.nameController.text}',
+                'Hi, ${profileController.nameController.text == '' ? 'User' : profileController.nameController.text}',
                 style:
                     const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
@@ -233,24 +232,31 @@ class _PassengerProfileState extends State<PassengerProfile> {
                       ageError!,
                       style: const TextStyle(color: Colors.red),
                     ),
-                    
-                  _buildDropdownField('Gender', profileController.selectedGender == ''? null : profileController.selectedGender, [
-                    'Male',
-                    'Female'
-                  ], (value) {
+                  _buildDropdownField(
+                      'Gender',
+                      profileController.selectedGender == ''
+                          ? null
+                          : profileController.selectedGender,
+                      ['Male', 'Female'], (value) {
                     setState(() {
                       profileController.selectedGender = value;
                     });
                   }),
-                  _buildDropdownField('Select Race', profileController.selectedRace == ''? null : profileController.selectedRace,
+                  _buildDropdownField(
+                      'Select Race',
+                      profileController.selectedRace == ''
+                          ? null
+                          : profileController.selectedRace,
                       ['Malay', 'Chinese', 'India', 'Others'], (value) {
                     setState(() {
                       profileController.selectedRace = value;
                     });
                   }),
-                  
-                  _buildTextField('Phone Number', profileController.phoneController,
-                      inputType: TextInputType.phone,),
+                  _buildTextField(
+                    'Phone Number',
+                    profileController.phoneController,
+                    inputType: TextInputType.phone,
+                  ),
                   if (phoneNumberError != null)
                     Text(
                       phoneNumberError!,

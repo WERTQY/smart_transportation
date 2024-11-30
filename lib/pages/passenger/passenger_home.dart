@@ -16,14 +16,14 @@ class _PassengerHomeState extends State<PassengerHome> {
   List<Widget> body = const [
     Center(child: Text("route")),
     Center(child: Text("info")),
-    Center(child: HomeMap()),
+    Center(child: PassengerMap()),
     Center(child: Text("chat")),
     Center(child: PassengerProfile()),
   ];
 
   @override
   Widget build(BuildContext context) {
-    ProfileController profileController =  Get.put(ProfileController());
+    ProfileController profileController =  Get.find();
     Get.put(LocationController());
 
     return Scaffold(

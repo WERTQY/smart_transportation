@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:smart_transportation/components/location/location_controller.dart';
+import 'package:smart_transportation/components/driver/driver_controller.dart';
 import 'package:smart_transportation/pages/driver/driver_map.dart';
 import 'package:smart_transportation/pages/driver/driver_profile.dart';
 import 'package:smart_transportation/components/profile/profile_controller.dart';
@@ -21,8 +21,8 @@ class _DriverHomeState extends State<DriverHome> {
 
   @override
   Widget build(BuildContext context) {
-    ProfileController profileController = Get.put(ProfileController());
-    Get.put(LocationController());
+    ProfileController profileController = Get.find();
+    DriverController driverController = Get.put(DriverController());
 
     return Scaffold(
       body: Obx(() {

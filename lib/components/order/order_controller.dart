@@ -68,9 +68,7 @@ class OrderController extends GetxController {
       }
     });
 
-    nameController.text = "2";
-    phoneController.text = "3";
-    amountController.text = "100";
+    amountController.text = "0";
     orderCollection = firestore.collection('activeOrder');
     OrderDetails orderDetails = await fetchSpecificOrderDetails(userId);
     writeOrderDetailsIntoController(orderDetails);
@@ -83,6 +81,7 @@ class OrderController extends GetxController {
       currentLocation = await location.getLocation();
       if (currentLocation != null) {
         moveToCurrentLocation();
+        update();
       }
     } catch (e) {
       print("Error fetching location: $e");

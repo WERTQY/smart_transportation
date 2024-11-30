@@ -25,28 +25,16 @@ class _RegisterPageState extends State<RegisterPage> {
       showErrorMessage("Passwords Do Not Match!");
     } else {
       try {
-        //show loading circle
-        showDialog(
-            context: context,
-            builder: (context) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            });
 
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text);
         // ignore: use_build_context_synchronously
-        if (mounted) {
-          // Dismiss the loading circle
-          Navigator.pop(context);
-        }
+
       } on FirebaseAuthException catch (e) {
         //pop the laoding circle
         // ignore: use_build_context_synchronously
         if (mounted) {
           // Dismiss the loading circle
-          Navigator.pop(context);
           if (e.code == 'email-already-in-use') {
             //show error to user
             showErrorMessage('Email already registered');
@@ -55,7 +43,10 @@ class _RegisterPageState extends State<RegisterPage> {
           } else if (e.code == 'invalid-email') {
             //show error to user
             showErrorMessage('Invalid email');
-          }
+          } else if (e.code == 'weak-password') {
+          //show error to user
+          showErrorMessage('Password too short');
+        }
         }
       }
     }
